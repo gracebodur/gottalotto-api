@@ -1,7 +1,12 @@
 BEGIN;
 
 TRUNCATE
-  users;
+  guesses,
+  drawings,
+  weeks,
+  users,
+  schemaversion;
+
 
 INSERT INTO users (user_name, full_name, password)
 VALUES
