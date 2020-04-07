@@ -7,5 +7,5 @@ CREATE TABLE drawings (
 	drawing_4 SMALLINT NOT NULL,
 	drawing_5 SMALLINT NOT NULL,
 	drawing_power_ball SMALLINT NOT NULL,
-  date_drawn TIMESTAMP DEFAULT now() NOT NULL
+  draw_date TIMESTAMP DEFAULT now() NOT NULL
 );
