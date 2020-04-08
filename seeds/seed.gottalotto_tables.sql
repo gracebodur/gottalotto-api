@@ -14,7 +14,7 @@ VALUES
   ('malek', 'Malek Haj-Hussein', '$2a$12$3D/FNCVfI/RkbY.pw6HmbevZSFBBwxoHoIk/YTRVLQdIh9C0ECgYS'),
   ('grace', 'Grace Bodur', '$2a$12$pOde1szWj5A6dGcODWCUY.KHFKqkMuGuUvRPDBm73FP9xwxxHEUlC');
 
-INSERT INTO weeks (date_created)
+INSERT INTO weeks (week_start_date)
 VALUES
   ("2020-03-07T00:00:00.000"),
   ("2020-03-14T00:00:00.000"),
@@ -29,7 +29,7 @@ VALUES
   (3, 07, 40, 48, 55, 66, 11, "2020-03-28T00:00:00.000"),
   (4, 08, 31, 39, 40, 43, 04, "2020-04-04T00:00:00.000");
 
-INSERT INTO guesses (user_id, week_id, guess_1, guess_2, guess_3, guess_4, guess_5, power_ball, date_created, message, has_won)
+INSERT INTO guesses (user_id, week_id, guess_1, guess_2, guess_3, guess_4, guess_5, power_ball, guess_created_date, message, has_won)
 VALUES
   (1, 1, 12, 15, 26, 30, 32, 19, "2020-03-08T00:00:00.000", "Ea eiusmod do Lorem laboris incididunt.", true),
   (2, 1, 25, 23, 20, 35, 30, 11, "2020-03-10T00:00:00.000", "Amet cillum exercitation cupidatat dolor dolore pariatur.", false),

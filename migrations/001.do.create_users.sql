@@ -3,6 +3,6 @@ CREATE TABLE users (
   user_name TEXT NOT NULL UNIQUE,
   full_name TEXT NOT NULL,
   password TEXT NOT NULL,
-	date_created TIMESTAMP DEFAULT now() NOT NULL,
+	user_created_date TIMESTAMP DEFAULT now() NOT NULL,
   date_modified TIMESTAMP DEFAULT now() NOT NULL
 );

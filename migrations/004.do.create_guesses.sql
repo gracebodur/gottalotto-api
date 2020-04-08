@@ -10,7 +10,7 @@ CREATE TABLE guesses (
 	guess_4 SMALLINT NOT NULL,
 	guess_5 SMALLINT NOT NULL,
 	power_ball SMALLINT NOT NULL,
-  date_created TIMESTAMP DEFAULT now() NOT NULL,
+  guess_created_date TIMESTAMP DEFAULT now() NOT NULL,
   message VARCHAR(280) NOT NULL,
 	has_won BOOLEAN NOT NULL DEFAULT FALSE
 );

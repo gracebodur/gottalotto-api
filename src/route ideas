@@ -1,0 +1,21 @@
+guesses route:
+
+X getAllGuesses
+X getGuessesByWeekId
+X postGuess
+patchWinningGuess
+**OPTIONAL** patchGuess (change guessed numbers and change message)
+
+----------------------------------------------------------------
+
+drawings route:
+
+getAllDrawings
+getDrawingByWeekId
+postDrawing
+
+----------------------------------------------------------------
+
+weeks router:
+
+postWeek
