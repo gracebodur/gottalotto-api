@@ -73,6 +73,18 @@ guessesRouter
 			.catch(next)
 	})
 
-
+guessesRouter
+	.route('/winner/:guess_id')
+	.patch(jsonBodyParser, (req, res, next) => {
+		GuessesService.updateWinningGuess(
+			req.app.get('db'),
+			req.params.guess_id
+		)
+			.then(numRowsAffected => {
+				res.status(204).end()
+			})
+			.catch(next)
+	})
 
 module.exports = guessesRouter
+

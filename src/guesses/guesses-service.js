@@ -28,7 +28,22 @@ const GuessesService = {
 			.returning("*")
 			.then(([guess]) => guess)
 			.then(guess => GuessesService.getById(db, guess.guess_id));
-	}
+	},
+	updateWinningGuess(db, guess_id) {
+		return GuessesService.getById(db, guess_id)
+			.update('has_won', true)
+	},
 }
 
 module.exports = GuessesService
+
+// deleteArticle(knex, id) {
+// 	return knex('blogful_articles')
+// 		.where({ id })
+// 		.delete()
+// },
+// updateArticle(knex, id, newArticleFields) {
+// 	return knex('blogful_articles')
+// 		.where({ id })
+// 		.update(newArticleFields)
+// },
