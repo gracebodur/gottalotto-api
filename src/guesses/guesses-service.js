@@ -2,8 +2,10 @@ const GuessesService = {
 	getAllGuesses(db) {
 		return db
 			.from('guesses')
+			.select('*')
+
 			.leftJoin('users',
-				'users.user_id', 'guesses.user_id'
+				'guesses.user_id', 'users.user_id'
 			)
 			.leftJoin('weeks',
 				'weeks.week_id', 'guesses.week_id'
@@ -28,6 +30,10 @@ const GuessesService = {
 			.returning("*")
 			.then(([guess]) => guess)
 			.then(guess => GuessesService.getById(db, guess.guess_id));
+	},
+	getAllWinners(db) {
+		return GuessesService.getAllGuesses(db)
+			.where('has_won', true)
 	},
 	updateWinningGuess(db, guess_id) {
 		return GuessesService.getById(db, guess_id)
