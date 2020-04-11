@@ -27,10 +27,9 @@ X postWeek
 CRON JOB:
 
 1. fetch drawing from lottery api
-4. create new week (responds with new week_id ----> lastWeekId = newWeekId - 1)
 2. post drawing in drawings table
 3. fetch guesses from gottalotto-api for previous week
-
+4. create new week (responds with new week_id ----> lastWeekId = newWeekId - 1)
 5. figure out winner
 6. patch winning guess
 

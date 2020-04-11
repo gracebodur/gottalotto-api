@@ -20,13 +20,17 @@
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "bent": "^7.1.2",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
+    "got": "^10.7.0",
     "helmet": "^3.21.2",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.20.13",
     "morgan": "^1.9.1",
+    "node-cron": "^2.0.3",
+    "node-fetch": "^2.6.0",
     "pg": "^8.0.0",
     "xss": "^1.0.6"
   },
