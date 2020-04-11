@@ -1,4 +1,8 @@
 const WeeksService = {
+	getCurrentWeek(db) {
+		return db
+			.from('weeks')
+	},
 	insertWeek(db, newWeek) {
 		return db
 			.insert(newWeek)

@@ -5,9 +5,9 @@ const jsonBodyParser = express.json();
 const xss = require("xss");
 const { requireAuth } = require("../middleware/jwt-auth");
 
-const DrawingsRouter = express.Router();
+const drawingsRouter = express.Router();
 
-DrawingsRouter
+drawingsRouter
 	.route('/')
 	// .all(requireAuth)
 	.get((req, res, next) => {
@@ -44,7 +44,7 @@ DrawingsRouter
 	})
 
 
-DrawingsRouter
+drawingsRouter
 	.route('/:week_id')
 	// .all(requireAuth)
 	.get((req, res, next) => {
@@ -58,7 +58,7 @@ DrawingsRouter
 			.catch(next)
 	})
 
-// DrawingsRouter
+// drawingsRouter
 // 	.route('/winner/:drawing_id')
 // 	.patch(jsonBodyParser, (req, res, next) => {
 // 		DrawingsService.updateWinningdrawing(
@@ -71,5 +71,5 @@ DrawingsRouter
 // 			.catch(next)
 // 	})
 
-module.exports = DrawingsRouter
+module.exports = drawingsRouter
 

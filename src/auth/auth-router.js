@@ -14,6 +14,8 @@ authRouter.post("/login", jsonBodyParser, (req, res, next) => {
       });
   AuthService.getUserWithUserName(req.app.get("db"), loginUser.user_name)
     .then(dbUser => {
+      console.log('dbuser', dbUser)
+      // res.send(dbUser)
       if (!dbUser)
         return res.status(400).json({
           error: "Incorrect user_name or password"
@@ -30,6 +32,7 @@ authRouter.post("/login", jsonBodyParser, (req, res, next) => {
         const sub = dbUser.user_name;
         const payload = { user_id: dbUser.id };
         res.send({
+          dbUser: dbUser,
           authToken: AuthService.createJwt(sub, payload)
         });
       });

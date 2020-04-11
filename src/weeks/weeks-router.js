@@ -23,4 +23,15 @@ weeksRouter
 			.catch(next);
 	})
 
+weeksRouter
+	.route('/currentweek')
+	.get((req, res, next) => {
+		WeeksService.getCurrentWeek(req.app.get('db'))
+			.then(weeks => {
+				const week = weeks[weeks.length - 1]
+				res.json(week)
+			})
+			.catch(next)
+	})
+
 module.exports = weeksRouter
