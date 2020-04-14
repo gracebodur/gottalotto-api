@@ -35,11 +35,17 @@ app.use('/api/users', usersRouter)
 app.use("/api/auth", authRouter);
 
 const getLatestDrawing = () => {
+    // gets full list of power ball drawings
+    // passes the most recent drawing into next function
     fetch('https://data.ny.gov/resource/d6yy-54nr.json')
         .then(res => res.json())
         .then(json => createPostDrawing(json[0]))
 }
 const createPostDrawing = (latestDrawing) => {
+    // deconstructs latestDrawing
+    // gets current week 
+    // passes all of that data into next function to post drawing to our db
+
     console.log(latestDrawing)
     const { draw_date, winning_numbers } = latestDrawing
     // fetch(`${config.API_ENDPOINT}/weeks/currentweek`)
@@ -50,6 +56,7 @@ const createPostDrawing = (latestDrawing) => {
 }
 const postDrawing = (week_id, winning_numbers, draw_date) => {
     // parse out winning_numbers into drawing_1 through drawing_5 and power_ball
+    // constructs newDrawing variable and posts it to our drawings table
     const numStrArr = winning_numbers.split(' ')
     console.log(numStrArr)
     const drawing_1 = parseInt(numStrArr[0])
@@ -84,25 +91,62 @@ const postDrawing = (week_id, winning_numbers, draw_date) => {
 }
 
 const getGuesses = (drawing) => {
+    // finds current week_id and passes it along with the latest drawing into next function
     GuessesService.getGuessesByWeekId(app.get('db'), drawing.week_id)
-        .then(res => console.log('Last weeks guesses:', res))
+        .then(guesses => createWeek(drawing, guesses))
+}
+
+const createWeek = (drawing, guesses) => {
+    //creates new week in weeks table
+    //basically increments to next the next week for entire program
+    WeeksService.insertWeek(app.get('db'), null)
+        .then(week => week.json())
+        .then(json => console.log(json))
+    findWinner(drawing, guesses)
+}
+
+const findWinner = (drawingData, guessList) => {
+    // compares all guesses against the latest drawing to find a winner.
+    // takes in drawingData as obj, and guessList as array of objs
+    const { drawing_1, drawing_2, drawing_3, drawing_4, drawing_5, drawing_power_ball } = drawingData
+    const drawing = [
+        drawing_1,
+        drawing_2,
+        drawing_3,
+        drawing_4,
+        drawing_5,
+        // drawing_power_ball
+    ]
+    //loop through array of objects of each guess from previous week
+    for (let i = 0; i > guessList.lenth; i++) {
+        // set value of current guessItem
+        const guessItem = guessList[i]
+        // destructure guessed numbers from each guessItem
+        const { guess_1, guess_2, guess_3, guess_4, guess_5, power_ball } = guessItem
+        // create guess array excluding powerball ( to make sorting guessed numbers possible )
+        const guess = [
+            guess_1,
+            guess_2,
+            guess_3,
+            guess_4,
+            guess_5,
+            // power_ball 
+        ]
+
+        // comparison code here
+
+    }
+
+
 }
 
 // createPostDrawing()
 cron.schedule(" * * * * * ", () => {
-    console.log('cron job has completed. ')
 
     getLatestDrawing()
 
+    console.log('cron job has completed. ')
 })
-// WeeksService.getCurrentWeek(app.get('db'))
-//     .then(weeks => {
-//         console.log('all weeks', weeks)
-//         const week = weeks[weeks.length - 1]
-//         console.log('current week', week)
-//         return week.week_id
-//     })
-
 
 
 app.use(function errorHandler(error, req, res, next) {
