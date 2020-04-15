@@ -94,14 +94,16 @@ const getGuesses = (drawing) => {
     // finds current week_id and passes it along with the latest drawing into next function
     GuessesService.getGuessesByWeekId(app.get('db'), drawing.week_id)
         .then(guesses => createWeek(drawing, guesses))
+    // .then(guesses => console.log('guesses: ', guesses))
 }
 
 const createWeek = (drawing, guesses) => {
     //creates new week in weeks table
     //basically increments to next the next week for entire program
-    WeeksService.insertWeek(app.get('db'), null)
-        .then(week => week.json())
-        .then(json => console.log(json))
+    const newWeek = { week_start_date: null }
+
+    WeeksService.insertWeek(app.get('db'), newWeek)
+        .then(week => console.log('week stuff', week))
     findWinner(drawing, guesses)
 }
 
@@ -115,14 +117,21 @@ const findWinner = (drawingData, guessList) => {
         drawing_3,
         drawing_4,
         drawing_5,
-        // drawing_power_ball
+        drawing_power_ball
     ]
+
+    console.log('Drawing Array: ', drawing)
+    console.log('Drawing PB: ', drawing_power_ball)
     //loop through array of objects of each guess from previous week
-    for (let i = 0; i > guessList.lenth; i++) {
-        // set value of current guessItem
-        const guessItem = guessList[i]
+    // for (let i = 0; i > guessList.length; i++) {
+    // const guessItem = guessList[i]
+
+    // set value of current guessItem
+    let newArr = guessList.map((guessItem, i) => {
+        console.log('guessList: ', guessItem)
         // destructure guessed numbers from each guessItem
         const { guess_1, guess_2, guess_3, guess_4, guess_5, power_ball } = guessItem
+        const guess_power_ball = power_ball
         // create guess array excluding powerball ( to make sorting guessed numbers possible )
         const guess = [
             guess_1,
@@ -130,18 +139,24 @@ const findWinner = (drawingData, guessList) => {
             guess_3,
             guess_4,
             guess_5,
-            // power_ball 
+            // guess_power_ball 
         ]
+        // sort each guess
+        guess.sort((a, b) => a - b).push(guess_power_ball)
+        console.log('Guess Array: ', guess)
+        console.log('Guess PB: ', guess_power_ball)
+
+
 
         // comparison code here
 
-    }
+    })
 
 
 }
 
-// createPostDrawing()
 cron.schedule(" * * * * * ", () => {
+    console.log('cron job has started. ')
 
     getLatestDrawing()
 
