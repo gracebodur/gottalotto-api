@@ -186,6 +186,7 @@ const findWinner = (drawingData, guessList) => {
             // don't do a damn thing
             console.log('You suck')
         }
+
     }
 
     console.log('--------------------------------------------------')
@@ -194,7 +195,12 @@ const findWinner = (drawingData, guessList) => {
     console.log('Total Correct Numbers: ', highestNumCorrect)
     console.log('And a score of: ', lowestScore)
     console.log('--------------------------------------------------')
-
+    // GuessesService.updateWinningGuess(app.get('db'), highestNumCorrectGuessId)
+    //     .then()
+    //     .end()
+    fetch(`${config.API_ENDPOINT}/guesses/winner/${highestNumCorrectGuessId}`, {
+        method: 'PATCH'
+    })
 }
 
 
