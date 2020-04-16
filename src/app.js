@@ -46,31 +46,22 @@ const createPostDrawing = (latestDrawing) => {
     // gets current week 
     // passes all of that data into next function to post drawing to our db
 
-    console.log(latestDrawing)
     const { draw_date, winning_numbers } = latestDrawing
     // fetch(`${config.API_ENDPOINT}/weeks/currentweek`)
 
     WeeksService.getCurrentWeek(app.get('db'))
-        // .then(res => console.log(res))
         .then(weeks => postDrawing(weeks[weeks.length - 1].week_id, winning_numbers, draw_date))
 }
 const postDrawing = (week_id, winning_numbers, draw_date) => {
     // parse out winning_numbers into drawing_1 through drawing_5 and power_ball
     // constructs newDrawing variable and posts it to our drawings table
     const numStrArr = winning_numbers.split(' ')
-    console.log(numStrArr)
     const drawing_1 = parseInt(numStrArr[0])
     const drawing_2 = parseInt(numStrArr[1])
     const drawing_3 = parseInt(numStrArr[2])
     const drawing_4 = parseInt(numStrArr[3])
     const drawing_5 = parseInt(numStrArr[4])
     const drawing_power_ball = parseInt(numStrArr[5])
-    console.log('drawing 1', drawing_1)
-    console.log('drawing 2', drawing_2)
-    console.log('drawing 3', drawing_3)
-    console.log('drawing 4', drawing_4)
-    console.log('drawing 5', drawing_5)
-    console.log('drawing 6', drawing_power_ball)
 
     const newDrawing = {
         week_id,
@@ -85,7 +76,6 @@ const postDrawing = (week_id, winning_numbers, draw_date) => {
 
     DrawingsService.insertDrawing(app.get('db'), newDrawing)
         .then(drawing => {
-            console.log('Latest Drawing: ', drawing)
             getGuesses(drawing)
         })
 }
@@ -94,7 +84,6 @@ const getGuesses = (drawing) => {
     // finds current week_id and passes it along with the latest drawing into next function
     GuessesService.getGuessesByWeekId(app.get('db'), drawing.week_id)
         .then(guesses => createWeek(drawing, guesses))
-    // .then(guesses => console.log('guesses: ', guesses))
 }
 
 const createWeek = (drawing, guesses) => {
@@ -121,19 +110,20 @@ const findWinner = (drawingData, guessList) => {
     ]
 
     console.log('Drawing Array: ', drawing)
-    console.log('Drawing PB: ', drawing_power_ball)
-    //loop through array of objects of each guess from previous week
-    // for (let i = 0; i > guessList.length; i++) {
-    // const guessItem = guessList[i]
 
-    // set value of current guessItem
-    let newArr = guessList.map((guessItem, i) => {
-        console.log('guessList: ', guessItem)
+    //loop through array of objects of each guess from previous week
+    let highestNumCorrect = 0
+    let lowestScore = 0
+    let highestNumCorrectGuessId = null
+    for (let i = 0; i < guessList.length; i++) {
+        const guessItem = guessList[i]
+        // set value of current guessItem
         // destructure guessed numbers from each guessItem
-        const { guess_1, guess_2, guess_3, guess_4, guess_5, power_ball } = guessItem
+        const { guess_1, guess_2, guess_3, guess_4, guess_5, power_ball, guess_id } = guessItem
         const guess_power_ball = power_ball
+
         // create guess array excluding powerball ( to make sorting guessed numbers possible )
-        const guess = [
+        let guess = [
             guess_1,
             guess_2,
             guess_3,
@@ -143,24 +133,75 @@ const findWinner = (drawingData, guessList) => {
         ]
         // sort each guess
         guess.sort((a, b) => a - b).push(guess_power_ball)
-        console.log('Guess Array: ', guess)
-        console.log('Guess PB: ', guess_power_ball)
+        // console.log('Guess Array: ', guess)
+        // console.log('Guess PB: ', guess_power_ball)
 
 
 
-        // comparison code here
+        let dSet = new Set(drawing)
+        let gSet = new Set(guess)
 
-    })
+        let correctGuesses = [...new Set(guess.filter(guessNum => dSet.has(guessNum)))]
 
+        let incorrectGuesses = guess.filter(guessNum => !dSet.has(guessNum))
+        let incorrectDrawings = drawing.filter(drawingNum => !gSet.has(drawingNum))
+
+        let numCorrect = correctGuesses.length
+        // let score = 0
+        // for (let j = 0; j < incorrectGuesses.length; j++) {
+        //     score += Math.abs(incorrectDrawings[j] - incorrectGuesses[j])
+        // }
+
+
+        if (numCorrect >= highestNumCorrect) {
+            console.log('Drawing Array: ', drawing)
+            console.log('guess ID: ', guess_id)
+            console.log('Guess Array: ', guess)
+            console.log('Number of correct: ', numCorrect)
+            console.log('correctGuesses', correctGuesses)
+            console.log('incorrectGuesses', incorrectGuesses)
+            console.log('incorrectDrawings', incorrectDrawings)
+            console.log('-------------------------------------------')
+
+
+            let score = 0
+            for (let j = 0; j < incorrectGuesses.length; j++) {
+                score += Math.abs(incorrectDrawings[j] - incorrectGuesses[j])
+            }
+            console.log('*************************')
+            console.log('score', score)
+
+            if (numCorrect == highestNumCorrect && score < lowestScore) {
+                lowestScore = score
+                highestNumCorrectGuessId = guess_id
+                console.log('Same number correct of ', numCorrect, ' but acheived a lower score of ', lowestScore)
+            } else if (numCorrect > highestNumCorrect) {
+                highestNumCorrect = numCorrect
+                lowestScore = score
+                highestNumCorrectGuessId = guess_id
+                console.log('NEW RECORD! ', highestNumCorrect, ' numbers correct!')
+            }
+            console.log('*************************')
+        } else {
+            // don't do a damn thing
+            console.log('You suck')
+        }
+    }
+
+    console.log('--------------------------------------------------')
+    console.log('And your winner is:')
+    console.log('Guess with the ID of: ', highestNumCorrectGuessId)
+    console.log('Total Correct Numbers: ', highestNumCorrect)
+    console.log('And a score of: ', lowestScore)
+    console.log('--------------------------------------------------')
 
 }
 
+
 cron.schedule(" * * * * * ", () => {
-    console.log('cron job has started. ')
+    console.log('cron job has started.')
 
     getLatestDrawing()
-
-    console.log('cron job has completed. ')
 })
 
 

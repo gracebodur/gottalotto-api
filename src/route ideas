@@ -29,10 +29,33 @@ CRON JOB:
 1. X - fetch drawing from lottery api
 2. X - post drawing in drawings table
 3. X - fetch guesses from gottalotto-api for previous week
-4. create new week (responds with new week_id ----> lastWeekId = newWeekId - 1)
+4. X - create new week (responds with new week_id ----> lastWeekId = newWeekId - 1)
 5. figure out winner
 6. patch winning guess
 
 
-todo:
-thank rashon
+GottaLotto To-Do Checklist:
+
+[] thank rashon
+[] complete CRON Job
+[] change client guessList to display user's current guess
+[] change client winner page to display last week's drawing and corresponding winner
+[] finish styling:
+	- [] homepage
+		- [] welcome
+		- [] winner list
+	- [] login form
+	- [] register form
+	- [] create guess form
+	- [] guesslistpage
+[] add tests:
+	- [X] smoketests on client components
+	- [] happy path tests on api
+[] deployment:
+	- [] client
+	- [] api
+[] Documentation
+	- [] client README
+	- [] api README
+
+[] Add to our portfolios
