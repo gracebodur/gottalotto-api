@@ -204,7 +204,7 @@ const findWinner = (drawingData, guessList) => {
 }
 
 
-cron.schedule(" * * * * * ", () => {
+cron.schedule(" 15 10 * * 6 ", () => {
     console.log('cron job has started.')
 
     getLatestDrawing()
