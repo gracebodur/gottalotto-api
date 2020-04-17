@@ -21,10 +21,8 @@ const fetch = require('node-fetch')
 const app = express()
 
 const morganOption = (NODE_ENV === 'production') ? 'tiny' : 'common'
-
-
-
 app.use(morgan(morganOption))
+
 app.use(helmet())
 app.use(cors())
 
@@ -109,8 +107,6 @@ const findWinner = (drawingData, guessList) => {
         drawing_power_ball
     ]
 
-    console.log('Drawing Array: ', drawing)
-
     //loop through array of objects of each guess from previous week
     let highestNumCorrect = 0
     let lowestScore = 0
@@ -133,8 +129,6 @@ const findWinner = (drawingData, guessList) => {
         ]
         // sort each guess
         guess.sort((a, b) => a - b).push(guess_power_ball)
-        // console.log('Guess Array: ', guess)
-        // console.log('Guess PB: ', guess_power_ball)
 
 
 
@@ -147,57 +141,27 @@ const findWinner = (drawingData, guessList) => {
         let incorrectDrawings = drawing.filter(drawingNum => !gSet.has(drawingNum))
 
         let numCorrect = correctGuesses.length
-        // let score = 0
-        // for (let j = 0; j < incorrectGuesses.length; j++) {
-        //     score += Math.abs(incorrectDrawings[j] - incorrectGuesses[j])
-        // }
-
 
         if (numCorrect >= highestNumCorrect) {
-            console.log('Drawing Array: ', drawing)
-            console.log('guess ID: ', guess_id)
-            console.log('Guess Array: ', guess)
-            console.log('Number of correct: ', numCorrect)
-            console.log('correctGuesses', correctGuesses)
-            console.log('incorrectGuesses', incorrectGuesses)
-            console.log('incorrectDrawings', incorrectDrawings)
-            console.log('-------------------------------------------')
-
-
             let score = 0
             for (let j = 0; j < incorrectGuesses.length; j++) {
                 score += Math.abs(incorrectDrawings[j] - incorrectGuesses[j])
             }
-            console.log('*************************')
-            console.log('score', score)
 
             if (numCorrect == highestNumCorrect && score < lowestScore) {
                 lowestScore = score
                 highestNumCorrectGuessId = guess_id
-                console.log('Same number correct of ', numCorrect, ' but acheived a lower score of ', lowestScore)
             } else if (numCorrect > highestNumCorrect) {
                 highestNumCorrect = numCorrect
                 lowestScore = score
                 highestNumCorrectGuessId = guess_id
-                console.log('NEW RECORD! ', highestNumCorrect, ' numbers correct!')
             }
-            console.log('*************************')
         } else {
             // don't do a damn thing
-            console.log('You suck')
         }
 
     }
 
-    console.log('--------------------------------------------------')
-    console.log('And your winner is:')
-    console.log('Guess with the ID of: ', highestNumCorrectGuessId)
-    console.log('Total Correct Numbers: ', highestNumCorrect)
-    console.log('And a score of: ', lowestScore)
-    console.log('--------------------------------------------------')
-    // GuessesService.updateWinningGuess(app.get('db'), highestNumCorrectGuessId)
-    //     .then()
-    //     .end()
     fetch(`${config.API_ENDPOINT}/guesses/winner/${highestNumCorrectGuessId}`, {
         method: 'PATCH'
     })
@@ -205,15 +169,13 @@ const findWinner = (drawingData, guessList) => {
 
 
 cron.schedule(" 15 10 * * 6 ", () => {
-    console.log('cron job has started.')
-
     getLatestDrawing()
 })
 
 
 app.use(function errorHandler(error, req, res, next) {
     let response
-    if (NODE_ENV === 'production') {
+    if (process.env.NODE_ENV === 'production') {
         response = { error: { message: 'server error' } }
     } else {
         console.error(error)

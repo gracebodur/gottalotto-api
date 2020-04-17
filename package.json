@@ -16,6 +16,9 @@
     "expect": true
   },
   "keywords": [],
+  "engines": {
+    "node": "8.9.4"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -28,7 +31,9 @@
     "helmet": "^3.21.2",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.20.13",
+    "latest": "^0.2.0",
     "morgan": "^1.9.1",
+    "n": "^6.5.1",
     "node-cron": "^2.0.3",
     "node-fetch": "^2.6.0",
     "pg": "^8.0.0",

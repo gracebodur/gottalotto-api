@@ -42,18 +42,18 @@ GottaLotto To-Do Checklist:
 [] change client winner page to display last week's drawing and corresponding winner
 [] finish styling:
 	- [] homepage
-		- [] welcome
+		- [X] welcome
 		- [] winner list
 	- [] login form
 	- [] register form
-	- [] create guess form
+	- [X] create guess form
 	- [] guesslistpage
 [] add tests:
 	- [X] smoketests on client components
-	- [] happy path tests on api
+	- [] happy path tests on api - Malek
 [] deployment:
-	- [] client
-	- [] api
+	- [X] client
+	- [] api - Malek
 [] Documentation
 	- [] client README
 	- [] api README
