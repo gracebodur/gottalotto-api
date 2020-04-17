@@ -7,8 +7,10 @@
     "test": "mocha --require test/setup.js",
     "dev": "nodemon src/server.js",
     "migrate": "postgrator --config postgrator-config.js",
+    "migrate:test": "env NODE_ENV=test npm run migrate",
+    "migrate:production": "env SSL=true DATABASE_URL=$(heroku config:get DATABASE_URL) npm run migrate",
     "start": "node src/server.js",
-    "predeploy": "npm audit",
+    "predeploy": "npm audit && npm run migrate:production",
     "deploy": "git push heroku master"
   },
   "globals": {
@@ -41,9 +43,14 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "jest": "^24.8.0",
+    "minimist": "^1.2.5",
     "mocha": "^6.2.2",
     "nodemon": "^2.0.2",
     "postgrator-cli": "^3.3.0",
     "supertest": "^4.0.2"
+  },
+  "resolutions": {
+    "minimist": "^1.2.5"
   }
 }
