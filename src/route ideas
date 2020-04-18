@@ -40,14 +40,16 @@ GottaLotto To-Do Checklist:
 [X] complete CRON Job
 [] change client guessList to display user's current guess
 [] change client winner page to display last week's drawing and corresponding winner
-[] finish styling:
-	- [] homepage
+[X] finish styling:
+	- [X] homepage
 		- [X] welcome
-		- [] winner list
-	- [] login form
-	- [] register form
+		- [X] winner list
+	- [X] login form
+	- [X] register form
 	- [X] create guess form
-	- [] guesslistpage
+	- [X] guesslistpage
+
+[] make responsive design
 [] add tests:
 	- [X] smoketests on client components
 	- [] happy path tests on api - Malek

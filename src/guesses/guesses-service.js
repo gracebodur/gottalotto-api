@@ -3,7 +3,6 @@ const GuessesService = {
 		return db
 			.from('guesses')
 			.select('*')
-
 			.leftJoin('users',
 				'guesses.user_id', 'users.user_id'
 			)

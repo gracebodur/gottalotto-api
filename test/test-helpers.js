@@ -13,24 +13,24 @@ function makeUsersArray() {
 		},
 		{
 			user_id: 2,
-			user_name: 'test-user-1',
-			full_name: 'Test user 1',
+			user_name: 'test-user-2',
+			full_name: 'Test user 2',
 			password: 'password',
 			user_created_date: '2020-03-08 00:00:000',
 			date_modified: '2020-03-09 00:00:000'
 		},
 		{
 			user_id: 3,
-			user_name: 'test-user-1',
-			full_name: 'Test user 1',
+			user_name: 'test-user-3',
+			full_name: 'Test user 3',
 			password: 'password',
 			user_created_date: '2020-03-08 00:00:000',
 			date_modified: '2020-03-09 00:00:000'
 		},
 		{
 			user_id: 4,
-			user_name: 'test-user-1',
-			full_name: 'Test user 1',
+			user_name: 'test-user-4',
+			full_name: 'Test user 4',
 			password: 'password',
 			user_created_date: '2020-03-08 00:00:000',
 			date_modified: '2020-03-09 00:00:000'
@@ -38,60 +38,69 @@ function makeUsersArray() {
 	]
 }
 
-function makeGuessesArray(users) {
+function makeGuessesArray(users, weeks) {
 	return [
 		{
-			project_id: 1,
-			schoolname: 'First Test schoolname',
-			city: 'First test city!',
-			state: 'First test state!',
-			fulfillmenttrailer: 'First test fulfillmenttrailer!',
-			teachername: 'First Test teachername',
-			imageurl: 'http://placehold.it/500x500',
-			fundurl: 'https://donatetest.com',
+			guess_id: 1,
 			user_id: users[0].user_id,
-			date_created: '2020-03-09 00:00:000',
+			week_id: weeks[0].week_id,
+			guess_1: 1,
+			guess_2: 2,
+			guess_3: 3,
+			guess_4: 4,
+			guess_5: 5,
+			power_ball: 6,
+			guess_date_created: '2020-03-09 00:00:000',
+			message: 'First message test',
+			has_won: false
 		},
 		{
-			project_id: 2,
-			schoolname: 'Second Test schoolname',
-			city: 'Second test city!',
-			state: 'Second test state!',
-			fulfillmenttrailer: 'Second test fulfillmenttrailer!',
-			teachername: 'Second Test teachername',
-			imageurl: 'http://placehold.it/500x500',
-			fundurl: 'https://donatetest.com',
+			guess_id: 2,
 			user_id: users[1].user_id,
-			date_created: '2020-02-28T16:28:32.615Z',
+			week_id: weeks[1].week_id,
+			guess_1: 2,
+			guess_2: 3,
+			guess_3: 4,
+			guess_4: 5,
+			guess_5: 6,
+			power_ball: 7,
+			guess_date_created: '2020-03-09 00:00:000',
+			message: 'Second message test',
+			has_won: false
 		},
 		{
-			project_id: 3,
-			schoolname: 'Third Test schoolname',
-			city: 'Third test city!',
-			state: 'Third test state!',
-			fulfillmenttrailer: 'Third test fulfillmenttrailer!',
-			teachername: 'Third Test teachername',
-			imageurl: 'http://placehold.it/500x500',
-			fundurl: 'https://donatetest.com',
+			guess_id: 3,
 			user_id: users[2].user_id,
-			date_created: '2020-02-28T16:28:32.615Z',
+			week_id: weeks[2].week_id,
+			guess_1: 8,
+			guess_2: 9,
+			guess_3: 10,
+			guess_4: 11,
+			guess_5: 12,
+			power_ball: 13,
+			guess_date_created: '2020-03-09 00:00:000',
+			message: 'Third message test',
+			has_won: false
 		},
 		{
-			project_id: 4,
-			schoolname: 'Fourth Test schoolname',
-			city: 'Fourth test city!',
-			state: 'Fourth test state!',
-			fulfillmenttrailer: 'Fourth test fulfillmenttrailer!',
-			teachername: 'Fourth Test teachername',
-			imageurl: 'http://placehold.it/500x500',
-			fundurl: 'https://donatetest.com',
+			guess_id: 4,
 			user_id: users[3].user_id,
-			date_created: '2020-02-28T16:28:32.615Z',
+			week_id: weeks[3].week_id,
+			guess_1: 14,
+			guess_2: 15,
+			guess_3: 16,
+			guess_4: 17,
+			guess_5: 18,
+			power_ball: 19,
+			guess_date_created: '2020-03-09 00:00:000',
+			message: 'Foufth message test',
+			has_won: false
 		},
 	]
 }
 
-function makeReviewsArray(users, projects) {
+function makeDrawingsArray(users, weeks) {
+	week_id, drawing_1, drawing_2, drawing_3, drawing_4, drawing_5, drawing_power_ball, draw_date
 	return [
 		{
 			review_id: 1,
@@ -181,37 +190,6 @@ function makeExpectedProject(users, project, reviews = []) {
 			date_created: user.date_created,
 		},
 	}
-}
-
-function calculateAverageReviewRating(reviews) {
-	if (!reviews.length) return 0
-
-	const sum = reviews
-		.map(review => review.rating)
-		.reduce((a, b) => a + b)
-
-	return Math.round(sum / reviews.length)
-}
-
-function makeExpectedProjectReviews(users, project_id, reviews) {
-	const expectedReviews = reviews
-		.filter(review => review.project_id === project_id)
-
-	return expectedReviews.map(review => {
-		const reviewUser = users.find(user => user.user_id === review.user_id)
-		return {
-			review_id: review.review_id,
-			text: review.text,
-			rating: review.rating,
-			date_created: review.date_created,
-			user: {
-				user_id: reviewUser.user_id,
-				user_name: reviewUser.user_name,
-				full_name: reviewUser.full_name,
-				date_created: reviewUser.date_created,
-			}
-		}
-	})
 }
 
 function makeMaliciousProject(user) {
