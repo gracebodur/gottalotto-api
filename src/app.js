@@ -168,7 +168,7 @@ const findWinner = (drawingData, guessList) => {
 }
 
 
-cron.schedule(" 30 22 * * 6 ", () => {
+cron.schedule(" 05 23 * * 6 ", () => {
     getLatestDrawing()
 })
 
