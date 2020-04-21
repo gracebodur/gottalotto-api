@@ -9,9 +9,7 @@ const GuessesService = {
 			.leftJoin('weeks',
 				'weeks.week_id', 'guesses.week_id'
 			)
-			.leftJoin('drawings',
-				'weeks.week_id', 'drawings.week_id')
-			.groupBy('guesses.guess_id', 'users.user_id', 'weeks.week_id', 'drawings.week_id')
+			.groupBy('guesses.guess_id', 'users.user_id', 'weeks.week_id')
 	},
 
 	getGuessesByWeekId(db, week_id) {
