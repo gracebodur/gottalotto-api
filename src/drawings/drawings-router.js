@@ -1,15 +1,11 @@
 const DrawingsService = require('./drawings-service')
-const path = require("path");
 const express = require("express");
 const jsonBodyParser = express.json();
-const xss = require("xss");
-const { requireAuth } = require("../middleware/jwt-auth");
 
 const drawingsRouter = express.Router();
 
 drawingsRouter
 	.route('/')
-	// .all(requireAuth)
 	.get((req, res, next) => {
 		DrawingsService.getAllDrawings(req.app.get('db'))
 			.then(drawings => {
@@ -43,10 +39,8 @@ drawingsRouter
 			.catch(next);
 	})
 
-
 drawingsRouter
 	.route('/:week_id')
-	// .all(requireAuth)
 	.get((req, res, next) => {
 		DrawingsService.getDrawingsByWeekId(
 			req.app.get('db'),
@@ -57,19 +51,6 @@ drawingsRouter
 			})
 			.catch(next)
 	})
-
-// drawingsRouter
-// 	.route('/winner/:drawing_id')
-// 	.patch(jsonBodyParser, (req, res, next) => {
-// 		DrawingsService.updateWinningdrawing(
-// 			req.app.get('db'),
-// 			req.params.drawing_id
-// 		)
-// 			.then(numRowsAffected => {
-// 				res.status(204).end()
-// 			})
-// 			.catch(next)
-// 	})
 
 module.exports = drawingsRouter
 

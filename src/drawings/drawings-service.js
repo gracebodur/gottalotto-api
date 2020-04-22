@@ -2,10 +2,6 @@ const DrawingsService = {
 	getAllDrawings(db) {
 		return db
 			.from('drawings')
-		// .leftJoin('weeks',
-		// 	'weeks.week_id', 'drawings.week_id'
-		// )
-		// .groupBy('drawings.week_id', 'weeks.week_id')
 	},
 
 	getDrawingsByWeekId(db, week_id) {

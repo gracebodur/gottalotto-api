@@ -31,7 +31,6 @@ const serializeGuess = guess => ({
 
 guessesRouter
 	.route('/')
-	// .all(requireAuth)
 	.get((req, res, next) => {
 		GuessesService.getAllGuesses(req.app.get('db'))
 			.then(guesses => {
@@ -61,14 +60,12 @@ guessesRouter
 			.then(guess => {
 				res
 					.status(201)
-					// .location(path.posix.join(req.originalUrl, `/${guess.guess_id}`))
 					.json(guess);
 			})
 			.catch(next);
 	})
 guessesRouter
 	.route('/winners')
-	// .all(requireAuth)
 	.get((req, res, next) => {
 		GuessesService.getAllWinners(
 			req.app.get('db')
@@ -94,7 +91,6 @@ guessesRouter
 
 guessesRouter
 	.route('/:week_id')
-	// .all(requireAuth)
 	.get((req, res, next) => {
 		GuessesService.getGuessesByWeekId(
 			req.app.get('db'),

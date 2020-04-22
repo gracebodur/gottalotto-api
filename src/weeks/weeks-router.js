@@ -9,7 +9,6 @@ const weeksRouter = express.Router();
 
 weeksRouter
 	.route('/')
-	// .all(requireAuth)
 	.post(jsonBodyParser, (req, res, next) => {
 		const { week_start_date } = req.body
 		const newWeek = { week_start_date }

@@ -14,7 +14,6 @@ const usersRouter = require('./users/users-router')
 const authRouter = require('./auth/auth-router')
 const config = require('./config')
 
-
 const cron = require('node-cron')
 const fetch = require('node-fetch')
 
@@ -45,7 +44,6 @@ const createPostDrawing = (latestDrawing) => {
     // passes all of that data into next function to post drawing to our db
 
     const { draw_date, winning_numbers } = latestDrawing
-    // fetch(`${config.API_ENDPOINT}/weeks/currentweek`)
 
     WeeksService.getCurrentWeek(app.get('db'))
         .then(weeks => postDrawing(weeks[weeks.length - 1].week_id, winning_numbers, draw_date))
@@ -125,7 +123,6 @@ const findWinner = (drawingData, guessList) => {
             guess_3,
             guess_4,
             guess_5,
-            // guess_power_ball 
         ]
         // sort each guess
         guess.sort((a, b) => a - b).push(guess_power_ball)
@@ -157,7 +154,7 @@ const findWinner = (drawingData, guessList) => {
                 highestNumCorrectGuessId = guess_id
             }
         } else {
-            // don't do a damn thing
+            // don't do a thing
         }
 
     }
