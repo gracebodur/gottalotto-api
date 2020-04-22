@@ -38,9 +38,10 @@ GottaLotto To-Do Checklist:
 
 [] thank rashon
 [X] complete CRON Job
-[] change client guessList to display user's current guess
 
-[] change client winner page to display last week's drawing and corresponding winner
+[...] change client guessList to display user's current guess
+
+[X] change client winner page to display last week's drawing and corresponding winner
 (need to reorder list with most recent winner first)
 (want to add last week's winner front and center followed by previous weeks)
 
@@ -53,13 +54,22 @@ GottaLotto To-Do Checklist:
 	- [X] create guess form
 	- [X] guesslistpage
 
+[X] - pull nav bar forwards
+[X] - push footer to bottom
+[X] - remove console.logs
+[X] - remove commented out code
+[X] - update welcome messages
+[] - inline code comments -Malek
+[X] - favicon 
+
 [X] make responsive design
-[] add tests:
+[X] add tests:
 	- [X] smoketests on client components
-	- [] happy path tests on api - Malek
-[] deployment:
+	- [X] happy path tests on api
+[] - Fix the cascade of weeks sequence-Malek
+[X] deployment:
 	- [X] client
-	- [] api - Malek
+	- [X] api
 [] Documentation
 	- [] client README
 	- [] api README
