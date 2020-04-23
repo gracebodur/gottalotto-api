@@ -14,9 +14,14 @@ usersRouter
 				return res.status(400).json({
 					error: `Missing '${field}' in request body`
 				})
-
+		const fullNameError = UsersService.validateFullName(full_name)
+		const usernameError = UsersService.validateUsername(user_name)
 		const passwordError = UsersService.validatePassword(password)
 
+		if (fullNameError)
+			return res.status(400).json({ error: fullNameError })
+		if (usernameError)
+			return res.status(400).json({ error: usernameError })
 		if (passwordError)
 			return res.status(400).json({ error: passwordError })
 		UsersService.hasUserWithUserName(

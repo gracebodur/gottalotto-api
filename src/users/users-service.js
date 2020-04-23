@@ -35,6 +35,30 @@ const UsersService = {
 		}
 		return null
 	},
+	validateUsername(user_name) {
+		if (user_name.length < 6) {
+			return 'Username must be at least 6 characters long.'
+		}
+		if (user_name.length > 72) {
+			return 'Username must be less than 72 characters'
+		}
+
+		if (user_name.startsWith(' ') || user_name.endsWith(' ')) {
+			return 'Username must not start or end with empty spaces'
+		}
+	},
+	validateFullName(full_name) {
+		if (full_name.length < 3) {
+			return 'Full Name must be at least 3 characters long'
+		}
+		if (full_name.length > 72) {
+			return 'Full name must be less than 72 characters'
+		}
+
+		if (full_name.startsWith(' ') || full_name.endsWith(' ')) {
+			return 'Full name must not start or end with empty spaces'
+		}
+	},
 
 	hashPassword(password) {
 		return bcrypt.hash(password, 12)
