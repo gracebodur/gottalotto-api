@@ -1,24 +1,29 @@
 const { expect } = require('chai')
 const knex = require('knex')
 const app = require('../src/app')
-const { makeGuessesArray, makeWinnersArray } = require('../test/guesses.fixtures')
+const fixtures = require('./guesses.fixtures')
 
 describe(`Guesses Endpoints`, function () {
     let db
 
+    const {
+        testGuesses,
+        testUsers,
+    } = fixtures.makeGuessesFixtures
+
     before('make knex instance', () => {
         db = knex({
             client: 'pg',
-            connection: process.env.TEST_DADABASE_URL,
+            connection: process.env.TEST_DATABASE_URL,
         })
         app.set('db', db)
     })
 
     after('disconnect from db', () => db.destroy())
 
-    before('clean the table', () => db('guesses').truncate())
+    before('clean the table', () => fixtures.cleanTables(db))
 
-    afterEach('cleanup', () => db('guesses').truncate())
+    afterEach('cleanup', () => fixtures.cleanTables(db))
 
     describe(`GET /api/guesses`, () => {
         context(`Given no guesses`, () => {
@@ -30,18 +35,18 @@ describe(`Guesses Endpoints`, function () {
         })
 
         context('Given there are guesses in the database', () => {
-            const testGuesses = makeGuessesArray()
-
             beforeEach('insert guesses', () => {
-                return db
-                    .into('guesses')
-                    .insert(testGuesses)
+                fixtures.seedGuesses(
+                    db,
+                    testUsers,
+                    testGuesses
+                )
             })
 
             it('responds with 200 and all of the guesses', () => {
                 return supertest(app)
                     .get('/api/guesses')
-                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
+                    // .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
                     .expect(200, testGuesses)
             })
         })
@@ -57,7 +62,7 @@ describe(`Guesses Endpoints`, function () {
         })
 
         context('Given there are winners in the database', () => {
-            const testWinners = makeWinnersArray()
+            const testWinners = fixtures.makeWinnersArray()
 
             beforeEach('insert winners', () => {
                 return db
@@ -76,7 +81,17 @@ describe(`Guesses Endpoints`, function () {
 
 
     describe(`POST /api/guesses`, () => {
+        beforeEach('insert guesses', () =>
+            fixtures.seedGuessesTables(
+                db,
+                testUsers,
+                testGuesses
+            )
+        )
+
         it(`creates guesses, responding with 201 and the new guesses`, function () {
+            const testGuess = testGuesses[0]
+            const testUser = testUsers[0]
             const newGuesses = {
                 user_id: 1,
                 week_id: 1,
@@ -139,37 +154,7 @@ describe(`Guesses Endpoints`, function () {
             })
         })
 
-        context(`Given an XSS attack guesses`, () => {
-            const maliciousGuesses = {
-                user_id: 911,
-                week_id: 1,
-                guess_1: 1,
-                guess_2: 2,
-                guess_3: 3,
-                guess_4: 4,
-                guess_5: 5,
-                power_ball: 6,
-                message: 'Naughty naughty very naughty <script>alert("xss");</script>Bad image <img src="https://url.to.file.which/does-not.exist" onerror="alert(document.cookie);">. But not <strong>all</strong> bad.'
-            }
 
-            beforeEach('insert malicious message', () => {
-                return db
-                    .into('guesses')
-                    .insert([maliciousGuesses])
-            })
-
-            it('removes XSS attack content', () => {
-                return supertest(app)
-                    .get(`/api/guesses/${maliciousGuesses.user_id}`)
-                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-                    .expect(200)
-                    .expect(res => {
-                        expect(res.body.message).to.eql(
-                            'Naughty naughty very naughty &lt;script&gt;alert(\"xss\");&lt;/script&gt;'`Bad image <img src="https://url.to.file.which/does-not.exist">. But not <strong>all</strong> bad.`
-                        )
-                    })
-            })
-        })
     })
 })
 
