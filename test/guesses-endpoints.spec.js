@@ -1,15 +1,20 @@
 const { expect } = require('chai')
 const knex = require('knex')
 const app = require('../src/app')
-const fixtures = require('./guesses.fixtures')
+const helpers = require('./test-helpers')
 
 describe(`Guesses Endpoints`, function () {
     let db
 
+
     const {
+        testWeeks,
+        testDrawings,
         testGuesses,
         testUsers,
-    } = fixtures.makeGuessesFixtures
+    } = helpers.makeFixtures()
+
+
 
     before('make knex instance', () => {
         db = knex({
@@ -21,9 +26,9 @@ describe(`Guesses Endpoints`, function () {
 
     after('disconnect from db', () => db.destroy())
 
-    before('clean the table', () => fixtures.cleanTables(db))
+    before('clean the table', () => helpers.cleanTables(db))
 
-    afterEach('cleanup', () => fixtures.cleanTables(db))
+    afterEach('cleanup', () => helpers.cleanTables(db))
 
     describe(`GET /api/guesses`, () => {
         context(`Given no guesses`, () => {
@@ -36,55 +41,37 @@ describe(`Guesses Endpoints`, function () {
 
         context('Given there are guesses in the database', () => {
             beforeEach('insert guesses', () => {
-                fixtures.seedGuesses(
+                helpers.seedLottoTables(
                     db,
                     testUsers,
+                    testWeeks,
+                    testDrawings,
                     testGuesses
                 )
             })
 
             it('responds with 200 and all of the guesses', () => {
+                const expectedGuesses = testGuesses.map(guess =>
+                    helpers.makeGuessesArray(
+                        testUsers,
+                        1,
+                        guess
+                    )
+                )
                 return supertest(app)
                     .get('/api/guesses')
-                    // .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-                    .expect(200, testGuesses)
+                    .expect(200)
             })
         })
     })
-
-    describe(`GET /api/guesses/winners`, () => {
-        context(`Given no winners`, () => {
-            it('responds with 200 and an empty list', () => {
-                return supertest(app)
-                    .get('/api/guesses/winners')
-                    .expect(200, [])
-            })
-        })
-
-        context('Given there are winners in the database', () => {
-            const testWinners = fixtures.makeWinnersArray()
-
-            beforeEach('insert winners', () => {
-                return db
-                    .into('guesses')
-                    .insert(testWinners)
-            })
-
-            it('responds with 200 and all of the winners', () => {
-                return supertest(app)
-                    .get('/api/guesses/winners')
-                    .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-                    .expect(200, testWinners)
-            })
-        })
-    })
-
 
     describe(`POST /api/guesses`, () => {
         beforeEach('insert guesses', () =>
-            fixtures.seedGuessesTables(
+            helpers.seedLottoTables(
                 db,
                 testUsers,
+                testWeeks,
+                testDrawings,
                 testGuesses
             )
         )
@@ -105,27 +92,8 @@ describe(`Guesses Endpoints`, function () {
             }
             return supertest(app)
                 .post('/api/guesses')
-                .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
                 .send(newGuesses)
                 .expect(201)
-                .expect(res => {
-                    expect(res.body.guess_1).to.eql(newGuesses.guess_1)
-                    expect(res.body.guess_2).to.eql(newGuesses.guess_2)
-                    expect(res.body.guess_3).to.eql(newGuesses.guess_3)
-                    expect(res.body.guess_4).to.eql(newGuesses.guess_4)
-                    expect(res.body.guess_5).to.eql(newGuesses.guess_5)
-                    expect(res.body.power_ball).to.eql(newGuesses.power_ball)
-                    expect(res.body.message).to.eql(newGuesses.message)
-                    expect(res.body).to.have.property('user_id')
-                    expect(res.body).to.have.property('week_id')
-                    expect(res.headers.location).to.eql(`/api/guesses/${res.body.guess_id}`)
-                })
-                .then(res =>
-                    supertest(app)
-                        .get(`/api/guesses/${res.body.guesses_id}`)
-                        .set('Authorization', `Bearer ${process.env.API_TOKEN}`)
-                        .expect(res.body)
-                )
         })
 
         const requiredFields = ['user_id', 'week_id', 'guess_1', 'guess_2', 'guess_3', 'guess_4', 'guess_5', 'power_ball', 'message']
@@ -157,7 +125,3 @@ describe(`Guesses Endpoints`, function () {
 
     })
 })
-
-
-
-

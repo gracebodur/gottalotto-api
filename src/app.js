@@ -153,10 +153,7 @@ const findWinner = (drawingData, guessList) => {
                 lowestScore = score
                 highestNumCorrectGuessId = guess_id
             }
-        } else {
-            // don't do a thing
         }
-
     }
 
     fetch(`${config.API_ENDPOINT}/guesses/winner/${highestNumCorrectGuessId}`, {

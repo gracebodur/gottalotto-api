@@ -63,8 +63,6 @@ describe('Auth Endpoints', function () {
 					.expect(400, { error: `Incorrect user_name or password` })
 			})
 
-
-
 		})
 	})
 })
